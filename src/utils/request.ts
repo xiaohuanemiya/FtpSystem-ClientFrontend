@@ -4,9 +4,23 @@ import { useAuthStore } from '@/store/auth'
 import { ElMessage } from 'element-plus'
 import router from '@/router'
 
+// 获取API基础URL，开发环境使用代理，生产环境使用环境变量
+const getBaseURL = (): string => {
+  const envUrl = import.meta.env.VITE_API_BASE_URL
+  if (envUrl) {
+    return envUrl
+  }
+  // 开发环境默认使用相对路径（配合vite代理）
+  if (import.meta.env.DEV) {
+    return ''
+  }
+  // 生产环境如果未配置则使用相对路径
+  return ''
+}
+
 // 创建axios实例
 const request: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080',
+  baseURL: getBaseURL(),
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json'

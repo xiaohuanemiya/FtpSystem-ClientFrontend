@@ -227,7 +227,13 @@ const handleBack = () => {
 // 选择文件
 const handleFileSelect = (uploadFile: UploadFile) => {
   if (uploadFile.raw) {
-    uploadFiles.value.push(uploadFile.raw)
+    // 检查是否已存在相同文件（按名称和大小判断）
+    const isDuplicate = uploadFiles.value.some(
+      f => f.name === uploadFile.raw!.name && f.size === uploadFile.raw!.size
+    )
+    if (!isDuplicate) {
+      uploadFiles.value.push(uploadFile.raw)
+    }
     uploadDialogVisible.value = true
   }
 }

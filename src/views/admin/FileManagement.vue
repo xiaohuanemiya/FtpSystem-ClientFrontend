@@ -196,12 +196,13 @@ const openRenameDialog = (file: FileInfo) => {
 const handleRename = async () => {
   if (!renameFormRef.value || !selectedFile.value) return
   
+  const fileId = selectedFile.value.id
   await renameFormRef.value.validate(async (valid) => {
     if (!valid) return
     
     submitting.value = true
     try {
-      await updateFile(selectedFile.value!.id, { newName: renameForm.newName })
+      await updateFile(fileId, { newName: renameForm.newName })
       ElMessage.success('重命名成功')
       renameDialogVisible.value = false
       loadFiles()
@@ -220,14 +221,16 @@ const openMoveDialog = (file: FileInfo) => {
 }
 
 const handleMove = async () => {
-  if (!moveFormRef.value || !selectedFile.value) return
+  if (!moveFormRef.value || !selectedFile.value || moveForm.newFolderId === null) return
   
+  const fileId = selectedFile.value.id
+  const folderId = moveForm.newFolderId
   await moveFormRef.value.validate(async (valid) => {
     if (!valid) return
     
     submitting.value = true
     try {
-      await updateFile(selectedFile.value!.id, { newFolderId: moveForm.newFolderId! })
+      await updateFile(fileId, { newFolderId: folderId })
       ElMessage.success('移动成功')
       moveDialogVisible.value = false
       loadFiles()
